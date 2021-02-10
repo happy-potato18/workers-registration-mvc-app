@@ -1,0 +1,45 @@
+﻿
+@model IEnumerable<WorkersRegistrationApp.Domain.Company>
+@{
+    ViewBag.Title = "CompaniesList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Companies</h2>
+<p>
+    @Html.ActionLink("Add company", "Create")
+</p>
+<table class="table-bordered tabl">
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Legal form</th>
+        <th>Count of workers</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.LegalForm)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CountOfWorkers)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+    </td>
+</tr>
+    }
+</table>
+<p>
+    @Html.ActionLink("Workers", "WorkerList", "Worker")
+</p>
+
