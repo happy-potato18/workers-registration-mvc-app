@@ -6,6 +6,11 @@ using System.Configuration;
 
 namespace WorkersRegistrationApp.Domain
 {
+    /// <summary>
+    /// The <c>Base</c> class.
+    /// Retrieves string for connection to server from config.
+    /// Used for creating connection to database.
+    /// </summary>
     public static class Base
     {
         private static string ConnectionString

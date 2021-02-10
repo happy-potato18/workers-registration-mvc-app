@@ -6,8 +6,15 @@ using System.Web.Mvc;
 
 namespace WorkersRegistrationApp.Controllers
 {
+    /// <summary>
+    /// The <c>CompanyController</c> class.
+    /// Contains methods for passing results of SQL-requests to/from table "Company"
+    /// </summary>
     public class CompanyController : Controller
     {
+        /// <summary>
+        /// Sends list of companies to the View
+        /// </summary>
         public ActionResult CompaniesList()
         {
             return View(Domain.SqlDataFlow.GetCompanyList());
@@ -34,7 +41,9 @@ namespace WorkersRegistrationApp.Controllers
             {
                 return HttpNotFound();
             }
+
             Domain.Company company = Domain.SqlDataFlow.FindCompanyById(id);
+
             if (company == null)
             {
                 return HttpNotFound();
@@ -49,12 +58,16 @@ namespace WorkersRegistrationApp.Controllers
             {
                 return HttpNotFound();
             }
+
             Domain.Company company = Domain.SqlDataFlow.FindCompanyById(id);
+
             if (company == null)
             {
                 return HttpNotFound();
             }
+
             Domain.SqlDataFlow.DeleteCompany(company);
+
             return RedirectToAction("CompaniesList");
         }
 
@@ -65,7 +78,9 @@ namespace WorkersRegistrationApp.Controllers
             {
                 return HttpNotFound();
             }
+
             Domain.Company company = Domain.SqlDataFlow.FindCompanyById(id);
+
             if (company == null)
             {
                 return HttpNotFound();

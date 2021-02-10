@@ -6,14 +6,29 @@ using System.Web;
 
 namespace WorkersRegistrationApp.Domain
 {
-    public  static class SqlDataFlow
+    /// <summary>
+    /// The <c>SqlDataFlow</c> class.
+    /// Contains methods for passing requests and getting responses from database
+    /// </summary>
+    public static class SqlDataFlow
     {
+        //string to create connection to database
         private static  readonly string _connectionString = Base.strConnect;
-        public static  List<Worker> GetWorkerList()
+
+        /// <summary>
+        /// Retrieves all workers' info from database
+        /// </summary>
+        /// <returns>
+        /// List of class <see cref="Domain.Worker"/>
+        /// </returns>
+         public static  List<Worker> GetWorkerList()
         {
             SqlConnection connection = new SqlConnection(_connectionString);
+
+            //adds info about appropriate company to its worker to response
             string sqlExpression = "SELECT * FROM companyworkersdb.dbo.worker LEFT JOIN companyworkersdb.dbo.company ON" +
                 " companyworkersdb.dbo.worker.company_id = companyworkersdb.dbo.company.id";
+
             List<Worker> workers = new List<Worker>();
             using (connection)
             {
@@ -21,10 +36,9 @@ namespace WorkersRegistrationApp.Domain
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 SqlDataReader reader = command.ExecuteReader();
 
-                if (reader.HasRows) // если есть данные
-                {
-                    
-                    while (reader.Read()) // построчно считываем данные
+                if (reader.HasRows) 
+                {                    
+                    while (reader.Read())
                     {
                         Worker worker = new Worker()
                         {
@@ -37,7 +51,7 @@ namespace WorkersRegistrationApp.Domain
                             CompanyId = (int)reader.GetValue(6)
                         };
 
-                        Company company = new Company()
+                        Company company = new Company() // adds info about company to worker object
                         {
                             Id = (int)reader.GetValue(7),
                             Title = (string)reader.GetString(8),
@@ -55,6 +69,10 @@ namespace WorkersRegistrationApp.Domain
 
             return workers;
         }
+
+        /// <summary>
+        /// Adds new <paramref name="worker"/> info to database.
+        /// </summary>
         public static void AddWorker(Worker worker)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -71,7 +89,13 @@ namespace WorkersRegistrationApp.Domain
                 connection.Close();               
             }
         }
-        
+
+        /// <summary>
+        /// Retrieves worker with specified <paramref name="id"/> from database
+        /// </summary>
+        /// <returns>
+        /// <see cref="Domain.Worker"/> object with info from database
+        /// </returns>
         public static Worker FindWorkerById(int? id)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -82,10 +106,9 @@ namespace WorkersRegistrationApp.Domain
                 connection.Open();
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows) // если есть данные
+                if (reader.HasRows) 
                 {
-
-                    if (reader.Read()) // построчно считываем данные
+                    if (reader.Read()) 
                     {
                         worker = new Worker()
                         {
@@ -108,6 +131,9 @@ namespace WorkersRegistrationApp.Domain
 
         }
 
+        /// <summary>
+        /// Delete info about <paramref name="worker"/> from database
+        /// </summary>
         public static void DeleteWorker(Worker worker)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -118,6 +144,9 @@ namespace WorkersRegistrationApp.Domain
             connection.Close();
         }
 
+        /// <summary>
+        /// Update info about <paramref name="worker"/> in database
+        /// </summary>
         public static void UpdateWorker(Worker worker)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -137,6 +166,12 @@ namespace WorkersRegistrationApp.Domain
             }
         }
 
+        /// <summary>
+        /// Retrieves all companies info from database
+        /// </summary>
+        /// <returns>
+        /// List of class <see cref="Domain.Company"/>
+        /// </returns>
         public static List<Company> GetCompanyList()
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -148,10 +183,9 @@ namespace WorkersRegistrationApp.Domain
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 SqlDataReader reader = command.ExecuteReader();
 
-                if (reader.HasRows) // если есть данные
+                if (reader.HasRows) 
                 {
-
-                    while (reader.Read()) // построчно считываем данные
+                    while (reader.Read()) 
                     {
                         Company company = new Company()
                         {
@@ -161,7 +195,6 @@ namespace WorkersRegistrationApp.Domain
                         };
 
                         company.CountOfWorkers = CountWorkers(company.Id);
-
                         companies.Add(company);
                     }
                 }
@@ -173,6 +206,9 @@ namespace WorkersRegistrationApp.Domain
             return companies;
         }
 
+        /// <summary>
+        /// Adds new <paramref name="company"/> info to database.
+        /// </summary>
         public static void AddCompany(Company company)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -188,7 +224,13 @@ namespace WorkersRegistrationApp.Domain
                 connection.Close();
             }
         }
-
+        
+        /// <summary>
+        /// Retrieves company with specified <paramref name="id"/> from database
+        /// </summary>
+        /// <returns>
+        /// <see cref="Domain.Company"/> object with info from database
+        /// </returns>
         public static Company FindCompanyById(int? id)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -199,10 +241,9 @@ namespace WorkersRegistrationApp.Domain
                 connection.Open();
                 SqlCommand command = new SqlCommand(sqlExpression, connection);
                 SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows) // если есть данные
+                if (reader.HasRows) 
                 {
-
-                    if (reader.Read()) // построчно считываем данные
+                    if (reader.Read())
                     {
                         company = new Company()
                         {
@@ -221,6 +262,9 @@ namespace WorkersRegistrationApp.Domain
 
         }
 
+        /// <summary>
+        /// Delete info about <paramref name="company"/> from database
+        /// </summary>
         public static void DeleteCompany(Company company)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -231,6 +275,9 @@ namespace WorkersRegistrationApp.Domain
             connection.Close();
         }
 
+        /// <summary>
+        /// Update info about <paramref name="company"/> in database
+        /// </summary>
         public static void UpdateCompany(Company company)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -247,12 +294,20 @@ namespace WorkersRegistrationApp.Domain
             }
         }
 
-
+        /// <summary>
+        /// Changes format of <paramref name="date"/>
+        /// Used when adding date value to database 
+        /// <see cref="AddWorker(Worker)"/>
+        /// <see cref="AddCompany(Company)"/>
+        /// </summary>
         private static string DateToSqlFriendlyDate(DateTime date)
         {
-            return date.Year.ToString() + date.Month.ToString() + date.Day.ToString();
+            return date.Year.ToString() +"-"+ date.Month.ToString() +"-"+ date.Day.ToString();
         }
-
+        /// <summary>
+        /// Counts workers in company with specified <paramref name="id"/>
+        /// Used when retrieving info about companies <see cref="GetCompanyList"/>
+        /// </summary>
         private static int CountWorkers(int id)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
